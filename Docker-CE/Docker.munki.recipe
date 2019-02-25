@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Comment</key>
+    <string>Created with Recipe Robot v1.0.2 (https://github.com/homebysix/recipe-robot)</string>
+    <key>Description</key>
+    <string>Downloads the latest version of Docker and imports it into Munki.</string>
+    <key>Identifier</key>
+    <string>com.universalrobots.mac.munki.Docker</string>
+    <key>Input</key>
+    <dict>
+        <key>MUNKI_REPO_SUBDIR</key>
+        <string>apps/%NAME%</string>
+        <key>NAME</key>
+        <string>Docker</string>
+        <key>pkginfo</key>
+        <dict>
+            <key>catalogs</key>
+            <array>
+                <string>testing</string>
+            </array>
+            <key>description</key>
+            <string> </string>
+            <key>developer</key>
+            <string>Docker, Inc.</string>
+            <key>MUNKI_CATEGORY</key>
+            <string>Virtualization</string>
+            <key>display_name</key>
+            <string>Docker</string>
+            <key>name</key>
+            <string>%NAME%</string>
+            <key>unattended_install</key>
+            <true/>
+            <key>postinstall_script</key>
+            <string><![CDATA[#!/bin/bash
+# Based on scripts/postinstall
+# which in turn is based on:
+# <https://forums.docker.com/t/feature-request-cli-tool-for-automated-installation/18334/4>
+# assumes the following directories exist:
+# /usr/local/bin
+# Will create:
+# /Library/PrivilegedHelperTools
+# if missing
+
+declare -r docker_bundle_dir=/Applications/Docker.app/Contents
+declare -r privtools=/Library/PrivilegedHelperTools
+
+for tool in docker docker-compose docker-diagnose docker-machine notary; do
+    /bin/ln -sf ${docker_bundle_dir}/Resources/bin/${tool} /usr/local/bin
+done
+
+[[ ! -d ${privtools} ]] && /bin/mkdir -p ${privtools} ; /bin/chmod 1755 ${privtools}
+
+/usr/bin/install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd ${privtools}
+/usr/bin/install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
+
+VERSION=$(/usr/bin/defaults read /Applications/Docker.app/Contents/Info.plist VmnetdVersion)
+/usr/bin/defaults write /Library/LaunchDaemons/com.docker.vmnetd.plist Version -string ${VERSION}
+/usr/bin/plutil -convert xml1 /Library/LaunchDaemons/com.docker.vmnetd.plist
+/bin/chmod 0644 /Library/LaunchDaemons/com.docker.vmnetd.plist
+
+/bin/launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
+            ]]></string>
+            <key>postuninstall_script</key>
+            <string><![CDATA[#!/bin/bash
+#
+# This script just reverses the postinstall operations
+#
+
+# Unload networking
+# (use -F to force this; there are probably better ways to do this
+# but this margin isn't big enough ...)
+/bin/launchctl unload -F /Library/LaunchDaemons/com.docker.vmnetd.plist
+
+rm -f /Library/LaunchDaemons/com.docker.vmnetd.plist
+rm -f /Library/PrivilegedHelperTools/com.docker.vmnetd
+rm -f /var/tmp/com.docker.vmnetd.socket
+
+for tool in docker docker-compose docker-diagnose docker-machine notary; do
+    rm -f /usr/local/bin/${tool}
+done
+            ]]></string>
+        </dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.6.1</string>
+    <key>ParentRecipe</key>
+    <string>com.universalrobots.mac.download.Docker</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>additional_pkginfo</key>
+                <dict>
+                    <key>version</key>
+                    <string>%version%</string>
+                </dict>
+            </dict>
+            <key>Processor</key>
+            <string>MunkiPkginfoMerger</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
+                <string>%pathname%</string>
+                <key>repo_subdirectory</key>
+                <string>%MUNKI_REPO_SUBDIR%</string>
+                <key>version_comparison_key</key>
+                <string>CFBundleVersion</string>
+            </dict>
+            <key>Processor</key>
+            <string>MunkiImporter</string>
+        </dict>
+    </array>
+</dict>
+</plist>
