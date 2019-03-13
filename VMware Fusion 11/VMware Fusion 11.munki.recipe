@@ -25,7 +25,6 @@
             <key>display_name</key>
             <key>MUNKI_CATEGORY</key>
             <string>Virtualization</string>
-            <string>VMWare Fusion Pro 11</string>
             <key>name</key>
             <string>%NAME%</string>
             <key>unattended_install</key>

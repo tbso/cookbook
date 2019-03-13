@@ -36,9 +36,9 @@ the latest full update for the given CHANNEL.
         <string>apps/Microsoft/%NAME%</string>
         <key>munki_required_update_name</key>
         <string></string>
-        <key>pkginfo</key>
         <key>MUNKI_CATEGORY</key>
         <string>Office</string>
+        <key>pkginfo</key>
         <dict>
             <key>blocking_applications</key>
             <array>

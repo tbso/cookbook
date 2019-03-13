@@ -22,9 +22,9 @@
         <string>apps/Microsoft/%NAME%</string>
         <key>MINIMUM_OS_VERSION</key>
         <string>10.12.0</string>
-        <key>pkginfo</key>
         <key>MUNKI_CATEGORY</key>
         <string>Office</string>
+        <key>pkginfo</key>
         <dict>
             <key>blocking_applications</key>
             <array>
