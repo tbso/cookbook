@@ -23,6 +23,7 @@
             <key>developer</key>
             <string>VMware</string>
             <key>display_name</key>
+            <string>VMware Fusion 11</string>
             <key>MUNKI_CATEGORY</key>
             <string>Virtualization</string>
             <key>name</key>

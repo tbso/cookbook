@@ -14,9 +14,9 @@
 		<string>apps/%NAME%</string>
 		<key>NAME</key>
 		<string>AutoPkgr</string>
-		<key>pkginfo</key>
 		<key>MUNKI_CATEGORY</key>
 		<string>Admin Utilities</string>
+		<key>pkginfo</key>
 		<dict>
 			<key>catalogs</key>
 			<array>

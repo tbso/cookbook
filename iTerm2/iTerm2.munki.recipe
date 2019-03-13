@@ -26,9 +26,9 @@
             <string>Developer Tools</string>
 			<key>name</key>
 			<string>%NAME%</string>
-			<key>unattended_install</key>
 			<key>developer</key>
             <string>George Nachma</string>
+			<key>unattended_install</key>
 			<true/>
 		</dict>
 	</dict>
