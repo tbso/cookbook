@@ -3,8 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Rebuilds Munki catalogs in Munki repo if any other recipe in the same autopkg run imported something.
-Use -k force_rebuild=YES to force a rebuild.</string>
+    <string>Rebuilds Munki catalogs in Munki repo if any other recipe in the same autopkg run imported something. Use -k force_rebuild=YES to force a rebuild.</string>
     <key>Identifier</key>
     <string>com.github.autopkg.munki.makecatalogs</string>
     <key>Input</key>
